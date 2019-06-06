@@ -37,19 +37,21 @@ def status_of_migration(req):
     doctor_name = ''.join(doctor_name)
     doctor_name = doctor_name.strip().title()"""
     """conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")"""
+    requestid=req['queryResult']['parameters']['request_id']
     conn=cx_Oracle.connect('migration_test/ojTR47_fr$!jhf @127.0.0.1/migrationTest')
 
     cur = conn.cursor()
     cur2 = conn.cursor()
     response = "Results: \n"
-    cur.execute("SELECT doc_name from doc_list where doc_name ='"+ doctor_name+"'")
+    cur.execute("SELECT FK_STATUS from T_ALMMING_MIGRATION_REQUEST where PK_ID ='"+ requestid+"'")
     rows = cur.fetchall()
     if len(rows) ==1:
-        cur2.execute("INSERT INTO Appointments values('"+doctor_name+"', '"+date+"')")
-        response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
-    elif len(rows)>1:
+        """cur2.execute("INSERT INTO Appointments values('"+doctor_name+"', '"+date+"')")"""
+        response = "Ststus of request " +requestid+ "  is " + FK_STATUS
+    """elif len(rows)>1:
         for row in rows:
             response = response + row[0] + "\n"
+            """
     else:
         response = "Sorry! I couldn't find any doctor with that name."
     conn.close()
